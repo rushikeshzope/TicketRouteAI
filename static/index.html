@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Understanding & Routing Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --accent: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success-bg: rgba(16, 185, 129, 0.2);
+      --success-border: #10b981;
+      --warning-bg: rgba(245, 158, 11, 0.2);
+      --warning-border: #f59e0b;
+      --purple-bg: rgba(168, 85, 247, 0.2);
+      --purple-border: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, #0f172a 90%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    /* Quick Fill Buttons */
+    .quick-samples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sample-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sample-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--text-main);
+      border-color: var(--primary);
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Result Panel */
+    .result-box {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.6;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .team-badge {
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-CUSTOMER_CARE { background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #38bdf8; }
+    .badge-REPORTS { background: rgba(168, 85, 247, 0.2); border: 1px solid #a855f7; color: #c084fc; }
+    .badge-FINANCE { background: rgba(52, 211, 153, 0.2); border: 1px solid #34d399; color: #34d399; }
+    .badge-PRODUCT_UPDATES { background: rgba(251, 146, 60, 0.2); border: 1px solid #fb923c; color: #fb923c; }
+    .badge-GENERAL_TRIAGE { background: rgba(244, 63, 94, 0.2); border: 1px solid #f43f5e; color: #fb7185; }
+
+    .token-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .tokens-zero {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: #34d399;
+    }
+
+    .tokens-used {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: #fbbf24;
+    }
+
+    /* Feedback Box */
+    .feedback-section {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .feedback-section p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .feedback-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-confirm {
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-confirm:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Table Section */
+    .history-card {
+      margin-top: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .truncate-text {
+      max-width: 280px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge-pill">
+        <span>⚡ SQLite + ChromaDB RAG Pipeline</span>
+      </div>
+      <h1>Ticket Understanding & Routing</h1>
+      <p class="subtitle">Submit a customer ticket to simulate RAG zero-token shortcut or LLM categorization</p>
+    </header>
+
+    <div class="grid">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>📝 Submit Support Ticket</h2>
+
+        <div class="form-group">
+          <label for="userId">User ID / Email</label>
+          <input type="text" id="userId" value="customer_42" placeholder="e.g. user@example.com">
+        </div>
+
+        <div class="form-group">
+          <label for="ticketText">Ticket Description</label>
+          <textarea id="ticketText" placeholder="Describe the issue..."></textarea>
+        </div>
+
+        <label>Quick Test Examples:</label>
+        <div class="quick-samples">
+          <button class="sample-btn" onclick="fillSample('I cannot log into my account, please assist.')">0-Token RAG Match</button>
+          <button class="sample-btn" onclick="fillSample('The custom ERP invoice export broke after updating.')">LLM Finance/Report</button>
+          <button class="sample-btn" onclick="fillSample('App crashes on video file upload')">Product Update</button>
+          <button class="sample-btn" onclick="fillSample('Need help with something unspecified')">Escalation</button>
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitTicket()">
+          <span id="btnText">Route Ticket</span>
+        </button>
+      </div>
+
+      <!-- Result Card -->
+      <div class="card">
+        <h2>🎯 Routing Result</h2>
+
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">📨</div>
+          <p>Submit a ticket to see real-time classification, confidence score, and token metrics.</p>
+        </div>
+
+        <div id="resultBox" class="result-box">
+          <div class="result-row">
+            <span class="result-label">Assigned Team</span>
+            <span id="resTeam" class="team-badge">FINANCE</span>
+          </div>
+
+          <div class="result-row">
+            <span class="result-label">Resolution Method</span>
+            <span id="resMethod" style="font-weight:600;">rag_direct</span>
+          </div>
+
+          <div class="result-row">
+            <span class="result-label">Confidence Score</span>
+            <span id="resConfidence" style="font-family:'JetBrains Mono', monospace;">95.2%</span>
+          </div>
+
+          <div class="result-row">
+            <span class="result-label">Token Consumption</span>
+            <span id="resTokens" class="token-pill tokens-zero">0 TOKENS</span>
+          </div>
+
+          <!-- Feedback loop training -->
+          <div class="feedback-section">
+            <p><strong>Feedback Loop (Dynamic Training):</strong> Correct team if needed to store embedding into vector DB:</p>
+            <div class="feedback-actions">
+              <select id="correctTeamSelect">
+                <option value="CUSTOMER_CARE">CUSTOMER_CARE</option>
+                <option value="REPORTS">REPORTS</option>
+                <option value="FINANCE">FINANCE</option>
+                <option value="PRODUCT_UPDATES">PRODUCT_UPDATES</option>
+                <option value="GENERAL_TRIAGE">GENERAL_TRIAGE</option>
+              </select>
+              <button class="btn-confirm" onclick="confirmFeedback()">Confirm</button>
+            </div>
+            <div id="feedbackNotice" style="font-size:0.75rem; color:#34d399; margin-top:0.4rem; display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Table -->
+    <div class="card history-card">
+      <h2>📊 Recent Processed Tickets</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cleaned Ticket</th>
+            <th>Assigned Team</th>
+            <th>Confidence</th>
+            <th>Method</th>
+            <th>Tokens</th>
+          </tr>
+        </thead>
+        <tbody id="ticketsTableBody">
+          <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Loading tickets...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    let currentTicketId = null;
+
+    function fillSample(text) {
+      document.getElementById('ticketText').value = text;
+    }
+
+    async function submitTicket() {
+      const text = document.getElementById('ticketText').value.trim();
+      const userId = document.getElementById('userId').value.trim();
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+
+      if (!text) {
+        alert('Please enter ticket description.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.textContent = 'Processing RAG & Classification...';
+
+      try {
+        const response = await fetch('/ticket', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text, user_id: userId || 'anonymous' })
+        });
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.detail || 'Failed to submit ticket');
+        }
+
+        const data = await response.json();
+        displayResult(data);
+        loadTickets();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        btnText.textContent = 'Route Ticket';
+      }
+    }
+
+    function displayResult(data) {
+      currentTicketId = data.id;
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'flex';
+      document.getElementById('feedbackNotice').style.display = 'none';
+
+      // Team badge
+      const teamBadge = document.getElementById('resTeam');
+      teamBadge.textContent = data.assigned_team;
+      teamBadge.className = 'team-badge badge-' + data.assigned_team;
+
+      // Method
+      document.getElementById('resMethod').textContent = data.resolved_by;
+
+      // Confidence
+      document.getElementById('resConfidence').textContent = (data.confidence * 100).toFixed(1) + '%';
+
+      // Tokens
+      const tokenPill = document.getElementById('resTokens');
+      tokenPill.textContent = data.tokens_used + ' TOKENS';
+      if (data.tokens_used === 0) {
+        tokenPill.className = 'token-pill tokens-zero';
+      } else {
+        tokenPill.className = 'token-pill tokens-used';
+      }
+
+      document.getElementById('correctTeamSelect').value = data.assigned_team;
+    }
+
+    async function confirmFeedback() {
+      if (!currentTicketId) return;
+      const selectedTeam = document.getElementById('correctTeamSelect').value;
+      const notice = document.getElementById('feedbackNotice');
+
+      try {
+        const res = await fetch(`/ticket/${currentTicketId}/confirm`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ correct_team: selectedTeam })
+        });
+
+        if (res.ok) {
+          notice.textContent = `✓ Ticket #${currentTicketId} confirmed as ${selectedTeam} and indexed into ChromaDB!`;
+          notice.style.display = 'block';
+          loadTickets();
+        }
+      } catch (e) {
+        alert('Feedback confirmation failed');
+      }
+    }
+
+    async function loadTickets() {
+      try {
+        const res = await fetch('/tickets');
+        if (res.ok) {
+          const tickets = await res.json();
+          const tbody = document.getElementById('ticketsTableBody');
+          if (tickets.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No tickets yet.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = tickets.map(t => `
+            <tr>
+              <td>#${t.id}</td>
+              <td class="truncate-text" title="${t.text}">${t.cleaned_text || t.text}</td>
+              <td><span class="team-badge badge-${t.assigned_team}" style="font-size:0.75rem; padding:0.2rem 0.5rem;">${t.assigned_team}</span></td>
+              <td style="font-family:'JetBrains Mono', monospace;">${(t.confidence * 100).toFixed(1)}%</td>
+              <td><code>${t.resolved_by}</code></td>
+              <td><span class="token-pill ${t.tokens_used === 0 ? 'tokens-zero' : 'tokens-used'}" style="font-size:0.75rem;">${t.tokens_used}</span></td>
+            </tr>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Could not load tickets:', err);
+      }
+    }
+
+    // Initial load
+    loadTickets();
+  </script>
+</body>
+</html>

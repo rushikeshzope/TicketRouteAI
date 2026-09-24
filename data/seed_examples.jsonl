@@ -1,0 +1,15 @@
+{"text": "I can't log into my account", "team": "CUSTOMER_CARE"}
+{"text": "My order hasn't arrived yet", "team": "CUSTOMER_CARE"}
+{"text": "How do I reset my password", "team": "CUSTOMER_CARE"}
+{"text": "Can you send me last month's analytics report", "team": "REPORTS"}
+{"text": "I need a data export of user activity", "team": "REPORTS"}
+{"text": "The dashboard numbers look wrong", "team": "REPORTS"}
+{"text": "I was charged twice this month", "team": "FINANCE"}
+{"text": "Can I get a refund for my subscription", "team": "FINANCE"}
+{"text": "I need an invoice for my last payment", "team": "FINANCE"}
+{"text": "When is the new feature launching", "team": "PRODUCT_UPDATES"}
+{"text": "The app crashes when I upload a file", "team": "PRODUCT_UPDATES"}
+{"text": "Can you add dark mode", "team": "PRODUCT_UPDATES"}
+{"text": "I have a question", "team": "GENERAL_TRIAGE"}
+{"text": "Need help", "team": "GENERAL_TRIAGE"}
+{"text": "Something is not working", "team": "GENERAL_TRIAGE"}
